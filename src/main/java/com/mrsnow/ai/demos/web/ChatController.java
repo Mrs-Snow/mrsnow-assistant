@@ -16,17 +16,18 @@
  */
 package com.mrsnow.ai.demos.web;
 
+import com.mrsnow.ai.demos.web.bo.ChatBo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
 import java.util.Objects;
 
 @RestController
 @RequestMapping("/ai")
+@Slf4j
 public class ChatController {
 
 	private final ChatClient chatClient;
@@ -35,16 +36,19 @@ public class ChatController {
 		this.chatClient = builder.build();
 	}
 
-	@GetMapping("/chat/{input}")
-	public String chat(@PathVariable String input) {
-		return this.chatClient.prompt().user(input).call().content();
+	@PostMapping("/chat")
+	public String chat(@RequestBody ChatBo chatBo) {
+		log.info("收到请求：{}",chatBo.getMessage());
+		return this.chatClient.prompt().user(chatBo.getMessage()).call().content();
 	}
 
-	@GetMapping("/stream")
-	public String stream(String input) {
-
-		Flux<String> content = this.chatClient.prompt().user(input).stream().content();
-		return Objects.requireNonNull(content.collectList().block()).stream().reduce((a, b) -> a + b).get();
+	@GetMapping(value = "/stream",produces = "text/event-stream")
+	public Flux<String> stream(String message) {
+		log.info("收到请求：{}",message);
+//		Flux<String> stringFlux = Flux.just("你好", "我是助手阿震", "请问有什么可以帮助您的")
+//				.delayElements(Duration.ofMillis(500));
+		Flux<String> content = this.chatClient.prompt().user(message).stream().content();
+		return content.concatWith(Flux.just("[END]")); // 添加结束标识
 	}
 
 }
