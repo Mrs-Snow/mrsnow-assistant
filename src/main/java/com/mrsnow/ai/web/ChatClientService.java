@@ -1,4 +1,4 @@
-package com.mrsnow.ai.demos.web;
+package com.mrsnow.ai.web;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -14,41 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mrsnow.ai.demos.web;
+package com.mrsnow.ai.web;
 
-import com.mrsnow.ai.demos.web.bo.ChatBo;
+import com.mrsnow.ai.commons.ContextUtil;
+import com.mrsnow.ai.services.AZhenAssistant;
+import com.mrsnow.ai.services.OperateService;
+import com.mrsnow.ai.web.bo.ChatBo;
+import com.mrsnow.ai.web.bo.OperateBo;
+import com.mrsnow.ai.web.bo.RspBo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
-
-import java.time.Duration;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/ai")
 @Slf4j
 public class ChatController {
 
-	private final ChatClient chatClient;
+    private final AZhenAssistant agent;
+    @Autowired
+    private OperateService operateService;
 
-	public ChatController(ChatClient.Builder builder) {
-		this.chatClient = builder.build();
-	}
+    public ChatController(AZhenAssistant agent) {
+        this.agent = agent;
+    }
 
-	@PostMapping("/chat")
-	public String chat(@RequestBody ChatBo chatBo) {
-		log.info("收到请求：{}",chatBo.getMessage());
-		return this.chatClient.prompt().user(chatBo.getMessage()).call().content();
-	}
 
-	@GetMapping(value = "/stream",produces = "text/event-stream")
-	public Flux<String> stream(String message) {
-		log.info("收到请求：{}",message);
-//		Flux<String> stringFlux = Flux.just("你好", "我是助手阿震", "请问有什么可以帮助您的")
-//				.delayElements(Duration.ofMillis(500));
-		Flux<String> content = this.chatClient.prompt().user(message).stream().content();
-		return content.concatWith(Flux.just("[END]")); // 添加结束标识
-	}
+    @GetMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> chat(String talkId, String message) {
+        log.info("收到请求：{}", message);
+        return this.agent.chat(talkId, message);
+    }
 
+    @PostMapping("/operate")
+    public RspBo operate(@RequestBody ChatBo chatBo) {
+        return RspBo.success(operateService.getOperate(chatBo.getTalkId()));
+    }
 }

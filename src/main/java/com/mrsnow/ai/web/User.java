@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mrsnow.ai.demos.web;
+package com.mrsnow.ai.web;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>

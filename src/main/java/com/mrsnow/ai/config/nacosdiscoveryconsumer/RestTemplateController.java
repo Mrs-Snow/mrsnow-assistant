@@ -14,21 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mrsnow.ai.demos.nacosdiscoveryconsumer;
+package com.mrsnow.ai.config.nacosdiscoveryconsumer;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
-public class OpenFeignController {
+public class RestTemplateController {
 
-    @Autowired
-    private EchoService echoService;
+    @LoadBalanced
+    public RestTemplate restTemplate;
 
-    @GetMapping("/feign/echo/{message}")
-    public String feignEcho(@PathVariable String message) {
-        return echoService.echo(message);
+    @LoadBalanced
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+    @GetMapping("/call/echo/{message}")
+    public String callEcho(@PathVariable String message) {
+        // 访问应用 nacos-service 的 REST "/echo/{message}"
+        return restTemplate.getForObject("http://nacos-service/echo/" + message, String.class);
     }
 }

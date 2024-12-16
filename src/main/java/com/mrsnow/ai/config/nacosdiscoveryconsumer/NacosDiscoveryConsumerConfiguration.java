@@ -14,15 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mrsnow.ai.demos.nacosdiscoveryconsumer;
+package com.mrsnow.ai.config.nacosdiscoveryconsumer;
 
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Configuration;
 
-@FeignClient("nacos-service") // 指向服务提供者应用
-public interface EchoService {
+@Configuration
+@EnableFeignClients // 激活 @FeignClient
+public class NacosDiscoveryConsumerConfiguration {
 
-    @GetMapping("/echo/{message}")
-    String echo(@PathVariable("message") String message);
 }

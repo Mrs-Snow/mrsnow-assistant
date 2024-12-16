@@ -1,4 +1,4 @@
-package com.mrsnow.ai.demos.web.bo;
+package com.mrsnow.ai.web.bo;
 
 import lombok.Data;
 import lombok.ToString;
@@ -10,5 +10,6 @@ import lombok.ToString;
 @Data
 @ToString
 public class ChatBo {
+    private String talkId;
     private String message;
 }

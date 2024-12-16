@@ -14,17 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mrsnow.ai.demos.nacosdiscoveryprovider;
+package com.mrsnow.ai.config.nacosdiscoveryconsumer;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class EchoServiceController {
+public class OpenFeignController {
 
-    @GetMapping("/echo/{message}")
-    public String echo(@PathVariable String message) {
-        return "[ECHO] : " + message;
+    @Autowired
+    private EchoService echoService;
+
+    @GetMapping("/feign/echo/{message}")
+    public String feignEcho(@PathVariable String message) {
+        return echoService.echo(message);
     }
 }
