@@ -16,11 +16,10 @@
  */
 package com.mrsnow.ai.web;
 
-import com.mrsnow.ai.commons.ContextUtil;
+
 import com.mrsnow.ai.services.AZhenAssistant;
 import com.mrsnow.ai.services.OperateService;
 import com.mrsnow.ai.web.bo.ChatBo;
-import com.mrsnow.ai.web.bo.OperateBo;
 import com.mrsnow.ai.web.bo.RspBo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
