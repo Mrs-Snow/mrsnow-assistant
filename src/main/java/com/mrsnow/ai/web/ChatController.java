@@ -17,6 +17,7 @@
 package com.mrsnow.ai.web;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mrsnow.ai.services.AZhenAssistant;
 import com.mrsnow.ai.services.OperateService;
 import com.mrsnow.ai.web.bo.ChatBo;
@@ -26,6 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+
+import java.time.Duration;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/ai")
@@ -39,7 +43,6 @@ public class ChatController {
     public ChatController(AZhenAssistant agent) {
         this.agent = agent;
     }
-
 
     @GetMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> chat(String talkId, String message) {
