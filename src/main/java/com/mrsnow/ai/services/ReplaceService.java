@@ -33,6 +33,7 @@ public class ReplaceService {
         hashMap.put("员工维护","/user/employee");
         hashMap.put("组织机构","/user/org");
         hashMap.put("岗位维护","/user/position");
+        hashMap.put("租户维护","/tenant/tenant");
         db.setRoutes(hashMap);
     }
 

@@ -31,11 +31,9 @@ public class AZhenAssistant {
                         	 您正在通过在线聊天系统与客户互动。
                         	 您能够支持查看某个功能的数据、跳转到某个功能页面，其余功能将在后续版本中添加，如果用户问的问题不支持请告知详情，您不需要主动介绍您能做什么。
                             在进行某个功能的数据查询、跳转页面操作之前，您必须始终从用户处获取以下信息：功能名称或者页面名称。
-                            每次对话我都会给您提供一个talk_id，您需要将这个talk_id作为参数传递给您的函数，以便在函数中获取到用户的后续操作和权限。
                             在询问用户之前，请检查消息历史记录以功能名称等信息，尽量避免重复询问给用户造成困扰。
                             您不需要给解释代码类的问题，也不去生成代码，教用户解决代码问题，如果用户询问直接回复您的功能范围即可。
-                            跳转页面的功能需要询问用户跳转成功了吗，没有成功可以找您重试。
-                            如果需要，您可以调用相应函数辅助完成。
+                            如果需要，您可以调用相应函数辅助完成，每次对话我都会给您提供参数talk_id，以便能顺利调用函数。
                             请讲中文。
                             今天的日期是 {current_date}.
                         """)
@@ -58,6 +56,7 @@ public class AZhenAssistant {
         return this.chatClient.prompt()
                 .system(s -> s.param("current_date", LocalDate.now().toString())
                         .param("talk_id", talkId))
+                .system("本次对话的talk_id为{talk_id}")
                 .user(userMessageContent)
                 .advisors(a -> a.param(CHAT_MEMORY_CONVERSATION_ID_KEY, talkId)
                         .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100)

@@ -24,7 +24,7 @@ public class SearchTools {
 
     public record SearchRequest(String name,String empName){}
 
-    public record ReplaceRequest(String chatId,String targetName){}
+    public record ReplaceRequest(String talkId,String targetName){}
     public record CompareRequest(int number1,int number2){}
     @JsonInclude(Include.NON_NULL)
     public record Route(String route,String type){}
@@ -34,7 +34,7 @@ public class SearchTools {
     public Function<ReplaceRequest, String> replaceTo(){
         return request->{
             try {
-                replaceService.replaceTo(request.chatId,request.targetName());
+                replaceService.replaceTo(request.talkId,request.targetName());
                 return "";
             } catch (Exception e) {
                 log.error("跳转失败",e);
@@ -65,7 +65,7 @@ public class SearchTools {
     public Function<ReplaceRequest, String> searchInfo(){
         return request->{
             try {
-                replaceService.replaceTo(request.chatId,request.targetName());
+                replaceService.replaceTo(request.talkId,request.targetName());
                 return "";
             } catch (Exception e) {
                 log.error("查找失败",e);
