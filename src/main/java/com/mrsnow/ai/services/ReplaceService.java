@@ -2,12 +2,16 @@ package com.mrsnow.ai.services;
 
 import com.mrsnow.ai.data.RouteData;
 import com.mrsnow.ai.data.RspType;
+import com.mrsnow.ai.feign.SystemApi;
 import com.mrsnow.ai.tools.SearchTools;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -16,25 +20,17 @@ import java.util.Optional;
  * 路由跳转
  **/
 @Service
+@RequiredArgsConstructor
 public class ReplaceService {
 
     private final RouteData db;
+    private final SystemApi systemApi;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
 
-    public ReplaceService(){
-        db = new RouteData();
-        initData();
-    }
-
-
-    private void initData(){
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("员工维护","/user/employee");
-        hashMap.put("组织机构","/user/org");
-        hashMap.put("岗位维护","/user/position");
-        hashMap.put("租户维护","/tenant/tenant");
-        db.setRoutes(hashMap);
+    public void initRouteData(Long tenantId){
+        Map<String, String> routes = systemApi.getRoutes(tenantId);
+        db.setRoutes(routes);
     }
 
     public void replaceTo(String talkId,String name){

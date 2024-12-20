@@ -20,6 +20,7 @@ package com.mrsnow.ai.web;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mrsnow.ai.services.AZhenAssistant;
 import com.mrsnow.ai.services.OperateService;
+import com.mrsnow.ai.services.ReplaceService;
 import com.mrsnow.ai.web.bo.ChatBo;
 import com.mrsnow.ai.web.bo.RspBo;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +29,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
-import java.time.Duration;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/ai")
@@ -39,6 +38,8 @@ public class ChatController {
     private final AZhenAssistant agent;
     @Autowired
     private OperateService operateService;
+    @Autowired
+    private ReplaceService replaceService;
 
     public ChatController(AZhenAssistant agent) {
         this.agent = agent;
@@ -53,5 +54,10 @@ public class ChatController {
     @PostMapping("/operate")
     public RspBo operate(@RequestBody ChatBo chatBo) {
         return RspBo.success(operateService.getOperate(chatBo.getTalkId()));
+    }
+
+    @PostMapping("/getRoute")
+    public void getRoute(@RequestBody GetBo getBo) {
+        replaceService.initRouteData(getBo.getId());
     }
 }
