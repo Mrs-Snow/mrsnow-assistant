@@ -48,6 +48,8 @@ public class NacosConfigDemoConfiguration {
 
     @Value("${user.name}")
     private String userName;
+    @Value("${mrsnow.model.choice}")
+    private String choice;
 
 
 
@@ -82,6 +84,7 @@ public class NacosConfigDemoConfiguration {
     @PostConstruct
     public void init() {
         System.out.printf("[init] user name : %s" ,userName);
+        System.out.printf("[init] model choice : %s" ,choice);
     }
 
     @PreDestroy
